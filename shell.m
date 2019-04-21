@@ -4,7 +4,7 @@ axis equal;
 axis([-1 1 -1 1 -1 1]);
 grid on;
 
-% Draw simple airplane made of cones and cylinders
+% Draw simple shell made of cones and cylinders
 [xc, yc, zc] = cylinder([0.1 0]);   % Cone
 [x,   y,  z] = cylinder(); % Cylinder
 

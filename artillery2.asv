@@ -1,0 +1,96 @@
+% Artillery Simulation
+% George Proner, Kevin Wei
+% INFO48874 Simulation and Visualization
+% Winter 2018
+
+
+clear;
+main();
+
+function main()
+% Constants
+GRAVITY = -9.80665;
+
+MAX_X = 5000;
+MAX_Y = 5000;
+MAX_HEIGHT = 5000;
+MASS_BULLET = 14.97; % HE Round 19.08, Projectile 14.97 kg
+
+AIR_DENSITY = 1.2041; % @ 20C and 1 atm. Units kg/m3
+DRAG_COEF_BULLET = 0.295; % https://en.wikipedia.org/wiki/Drag_coefficient
+CROSS_AREA_BULLET = 0.03463605901; % m^2 Calculated using area of circle with 105mm
+
+%visualization
+drawHowitzer();
+
+% Simulation
+elevation =pi/2;
+bearing = pi/2;
+time = 0;
+TIME_STEP = 0.1;
+bullet = [ 0 0 1 ]; % Initial bullet position [ X Y Z] starts at about 1 meter off the ground because barrel height.
+%initial bullet velocities
+vx = init_velocity*cos(elevation)*init_velocity*cos(bearing); %vx in terms of y and z
+vy = init_velocity*cos(elevation)*init_velocity*sin(bearing); %vy in terms of x and z
+vz = init_velocity*sin(elevation); %vz in terms of x
+
+%visualization
+h_fig = figure('Name', 'Artillery Shot Simulation');
+set(h_fig, 'Position', [p(1)  p(2)  p(3)  p(4)]);  % Set figure size same as before
+
+h = animatedline('LineWidth', 3);
+view(3);
+
+%     set(h_fig, 'KeyPressFcn', @keypress_callback);
+%     set(h_fig, 'KeyReleaseFcn', @keyrelease_callback);
+
+
+% Label the x, y, z axes
+xlabel('X');
+ylabel('Y');
+zlabel('Height');
+axis([0 MAX_X -MAX_Y MAX_Y 0 MAX_HEIGHT]);
+grid on;
+view(3);
+while bullet(3) >= 0
+    dx = vx * TIME_STEP;    % x-distance
+    dy = vy * TIME_STEP ;          % y-distance
+    dz = vz*time_step + (GRAVITY * TIME_STEP);           % height
+    
+    % Bullet position
+    x = x + dx;
+    z = z + dz;
+    y = y + dy;
+    % Air Resistance
+    Fx = 0.5 * AIR_DENSITY * DRAG_COEF_BULLET * Vx.^2 * CROSS_AREA_BULLET;
+    Fz = 0.5 * AIR_DENSITY * DRAG_COEF_BULLET * Vz.^2 * CROSS_AREA_BULLET;
+    
+    % Convert force of drag to velocity components of drag
+    if (Vx > 0)
+        drag_x = Fx / MASS_BULLET * TIME_STEP; %
+    else
+        drag_x = 0;
+    end
+    
+    
+    if (Vz > 0)
+        drag_z = Fz / MASS_BULLET * TIME_STEP;
+    else
+        % Drag reduces gravity when Vz <= 0
+        drag_z = -Fz / MASS_BULLET * TIME_STEP;
+    end
+    
+    % Projectile Calculations
+    Vx = Vx - drag_x;
+    Vz = Vz + GRAVITY * TIME_STEP - drag_z;
+    
+    time = time + TIME_STEP;
+    fprintf("%.3f s X: %f \t Z: %f \t Vx: %f \t Vz: %f\n", time, x, z, Vx, Vz);
+    
+    addpoints(h, x, y, z);
+    drawnow;
+    
+end
+
+
+end
