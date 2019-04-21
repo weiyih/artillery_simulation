@@ -10,7 +10,7 @@ main();
 function main()
 % Constants
 GRAVITY = -9.80665;
-
+target_coordinates = [5438 5966 0
 MAX_X = 10000;
 MAX_Y = 10000;
 MAX_HEIGHT = 10000;
@@ -46,6 +46,7 @@ view(3);
 
 drawHowitzer();
 drawShell();
+drawTarget();
 %     set(h_fig, 'KeyPressFcn', @keypress_callback);
 %     set(h_fig, 'KeyReleaseFcn', @keyrelease_callback);
 
@@ -62,7 +63,7 @@ velocity = 472; %initial muzzle velocity m/s
 vx = sqrt(velocity*cos(elevation)*velocity*cos(bearing)); %vx in terms of y and z because both the elevation and
 vy = sqrt(velocity*cos(elevation)*velocity*sin(bearing)); %vy in terms of x and z
 vz = velocity*sin(elevation); %vz in terms of x
-pause(5)
+pause(2)
 while bullet(3) >= 0
     axis([0 MAX_X -MAX_Y MAX_Y 0 MAX_HEIGHT]);
     dx = vx * TIME_STEP;    % x-distance
@@ -171,7 +172,7 @@ end
         target(13) = patch(X,Y,Z,'green');
                 [x,   y,  z] = cylinder([0.15 0.15]); % Cylinder
         target(2) = surface(0.1*z+0.5,           y,   x, 'FaceColor', [0.75 0.75 0.75]);
-        h(3) = surface(0.1*-z,          y,   x, 'FaceColor', [0.75 0.75 0.75]);
+        target(3) = surface(0.1*-z,          y,   x, 'FaceColor', [0.75 0.75 0.75]);
         target(4) = surface(0.1*z+0.5,           y+0.35,   x, 'FaceColor', [0.75 0.75 0.75]);
         target(5) = surface(0.1*-z,          y+0.35,   x, 'FaceColor', [0.75 0.75 0.75]);
         target(6) = surface(0.1*z+0.5,           y+1,   x, 'FaceColor', [0.75 0.75 0.75]);
@@ -180,10 +181,6 @@ end
         target(15) = surface(0.1*-z,          y+.65,   x, 'FaceColor', [0.75 0.75 0.75]);
         target(8) = surface(-0.1*z,          y,   0.2*x, 'FaceColor', 'green');
         rotate(target(8), [0 0 0.00001], 90);%rotating 90% around the z axis for correct orientation
-    end
-    function drawWheels()
-
-        
     end
 
 

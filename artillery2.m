@@ -10,7 +10,8 @@ main();
 function main()
 % Constants
 GRAVITY = -9.80665;
-
+target_coord = [5438 5966 0]; %where the enemy target lies
+WIND = 5;
 MAX_X = 10000;
 MAX_Y = 10000;
 MAX_HEIGHT = 10000;
@@ -33,7 +34,7 @@ previous_bullet = bullet; %storing the previous value to kind of cheat instead o
 
 %visualization
 l = light;           % Add a light
-set(l, 'Color', [1 1 1], 'Position', [5 5 5]);  % Set light color (WHITE) and position
+set(l, 'Color', [1 1 1], 'Position', [5000 5000 10000]);  % Set light color (WHITE) and position
 lighting gouraud;    % Change from flat to Gouraud shading, 'gouraud' preferred for curved surfaces
 material metal;   % Set material properties
 p = get(gcf, 'Position');
@@ -63,7 +64,7 @@ velocity = 472; %initial muzzle velocity m/s
 vx = sqrt(velocity*cos(elevation)*velocity*cos(bearing)); %vx in terms of y and z because both the elevation and
 vy = sqrt(velocity*cos(elevation)*velocity*sin(bearing)); %vy in terms of x and z
 vz = velocity*sin(elevation); %vz in terms of x
-pause(5)
+pause(2)
 while bullet(3) >= 0
     axis([0 MAX_X -MAX_Y MAX_Y 0 MAX_HEIGHT]);
     dx = vx * TIME_STEP;    % x-distance
@@ -109,6 +110,12 @@ while bullet(3) >= 0
     
     addpoints(h, bullet(1), bullet(2), bullet(3));
     drawnow;
+    
+end
+if abs(bullet(1) - target_coord(1)) <30 && abs(bullet(2)-target_coord(2)) <30 %we don't really care about the height since rounds burst on impact. simulation will have it thunder in around 30-40 meters. we're comparing x and y though. 
+    fprintf('The Target was destroyed.');
+else
+    fprintf('The target was outside the effective radius.');
     
 end
 
