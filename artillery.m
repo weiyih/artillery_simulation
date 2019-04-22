@@ -85,7 +85,6 @@ while z >= 0
         drag_x = 0;
     end
     
-    
     if (Vz > 0)
         drag_z = Fz / MASS_BULLET * TIME_STEP;
     else
@@ -116,18 +115,6 @@ end
     end
 
 
-%     function timer_callback(~, ~)
-%
-%     end
-%
-%     % TODO - keyboard callback functions arrow keys to change direction
-%
-%     % TODO - spacebar to fire artillery
-%     function fire_callback(~, event)
-%         if event.key == "space"
-%             spacePressed = true;
-%         end
-%     end
 %Draws howitzer model
     function drawHowitzer()
         [ex,   why,  zee] = cylinder([1 1]); % Cylinder

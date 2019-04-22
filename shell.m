@@ -11,5 +11,5 @@ grid on;
 h(1) = surface(xc,    0.25*zc,     -yc, 'FaceColor', 'yellow');
 h(2) = surface(0.105*x,-0.5*z, 0.105*y, 'FaceColor', 'yellow');
 
-t = hgtransform;
-set(h, 'Parent', t); 
+shell = hgtransform;
+set(h, 'Parent', shell); 

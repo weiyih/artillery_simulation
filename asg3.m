@@ -94,7 +94,16 @@ bearing   = cell2mat(fields(4));
         % Read the entire file into cell array 'fields'
         fields = textscan(f, '%f %f %f %f', 'Delimiter', ',');
         fclose(f);
-        
-        
+    end
+
+    % Artillery Shell
+    function shell()
+        [xc, yc, zc] = cylinder([0.1 0]);   % Cone
+        [x,   y,  z] = cylinder(); % Cylinder
+
+        h(1) = surface(xc,    0.25*zc,     -yc, 'FaceColor', 'yellow');
+        h(2) = surface(0.105*x,-0.5*z, 0.105*y, 'FaceColor', 'yellow');
+
+        shell = hgtransform;
     end
 end
