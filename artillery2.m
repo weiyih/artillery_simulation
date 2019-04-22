@@ -58,8 +58,9 @@ function main()
     axis([0 MAX_X -MAX_Y MAX_Y 0 MAX_HEIGHT]);
     grid on;
     view(3);
-    velocity = 472; %initial muzzle velocity m/s
+    
     %initial bullet velocities
+    velocity = 472; %initial muzzle velocity m/s
     vx = sqrt(velocity*cos(elevation)*velocity*cos(bearing)); %vx in terms of y and z because both the elevation and
     vy = sqrt(velocity*cos(elevation)*velocity*sin(bearing)); %vy in terms of x and z
     vz = velocity*sin(elevation); %vz in terms of x
@@ -124,7 +125,7 @@ end
         % Projectile Calculations
         vx = vx - drag_x;
         vy = vy - drag_y;
-        vz = vz -drag_z+ GRAVITY * TIME_STEP;
+        vz = vz - drag_z + GRAVITY * TIME_STEP;
         
     end
 
