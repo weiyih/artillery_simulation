@@ -112,7 +112,7 @@ while bullet(3) >= 0
     drawnow;
     
 end
-if abs(bullet(1) - target_coord(1)) <30 && abs(bullet(2)-target_coord(2)) <30 %we don't really care about the height since rounds burst on impact. simulation will have it thunder in around 30-40 meters. we're comparing x and y though. 
+if abs(bullet(1) - target_coord(1)) <30 && abs(bullet(2)-target_coord(2)) <30 %we don't really care about the height since rounds burst on impact. simulation will have it thunder in around 30-40 meters. we're comparing x and y though.
     fprintf('The Target was destroyed.');
 else
     fprintf('The target was outside the effective radius.');
@@ -121,19 +121,16 @@ end
 
     function drawHowitzer()
         [x,   y,  z] = cylinder([1 1]); % Cylinder
-        howitzer(2) = surface(0.5*z+0.5,           y+1.75,   x, 'FaceColor', [0.75 0.75 0.75]);%left wheel
-        howitzer(3) = surface(0.5*-z-0.5,          y+1.75,   x, 'FaceColor', [0.75 0.75 0.75]);%right wheel
-        howitzer(4) = surface(z*5,           y*0.3,   x*.3, 'FaceColor', 'green');%barrel
-        rotate(howitzer(4), [0 0 0.01], 90);%rotating 90% around the z axis for correct orientation
-        rotate(howitzer(4), [0.01 0 0], 45);%tilting barrel up
-        howitzer(1) = surface(z*3,           y*0.3,   x*.2, 'FaceColor', 'green');%right trail
-        howitzer(5) = surface(z*3,           y*0.3,   x*.2, 'FaceColor', 'green');%left trail
-        rotate(howitzer(1), [0 0 0.01], -45);%rotating 90% around the z axis for correct orientation
-        rotate(howitzer(1), [0.001 0 0], 25);%rotating 90% around the z axis for correct orientation
-        rotate(howitzer(5), [0 0 0.01], -135);%rotating 90% around the z axis for correct orientation
-        rotate(howitzer(5), [0.001 0 0], 25);%rotating 90% around the z axis for correct orientation
-        
-        %translate(h(4),[-5, -5, 0]);
+        howitzer(1) = surface(0.5*z,           y,   x, 'FaceColor', [0.75 0.75 0.75]);%left wheel
+        howitzer(2) = surface(0.5*z,          y,   x, 'FaceColor', [0.75 0.75 0.75]);%right wheel
+        howitzer(3) = surface(z*5,           y*0.3,   x*.3+1, 'FaceColor', 'green');%barrel
+        rotate(howitzer(1:2), [0 0 0.01], 90);%rotating 90% around the z axis for correct orientation
+        rotate(howitzer(3), [0 1 0], -45);%tilting barrel up
+        t = hgtransform;
+        set(howitzer, 'Parent', t);  % Apply the transform to all surfaces in vector 'h'
+        M = eye(4);
+        M = M * makehgtform('scale', [200 200 200]);%scaled up so it was visible
+        set(t, 'Matrix', M);   % Update transformation matrix
     end
     function drawShell()
         % Draw simple shell made of cones and cylinders
@@ -147,7 +144,7 @@ end
         set(shell, 'Parent', t);
     end
     function drawTarget()
-
+        
         X = [0 0.5 0.5 0];
         Y = [0 0 1 1];
         Z = [0 0 0 0];
@@ -156,38 +153,46 @@ end
         X = [0 0.5 0.5 0];
         Y = [0 0 1 1];
         Z = [0.25 0.25 0.25 0.25];
-        target(9) = patch(X,Y,Z,'green');
+        target(2) = patch(X,Y,Z,'green');
         
         X = [0 0.5 0.5 0];
         Y = [0 0 0 0];
         Z = [0 0 0.25 0.25];
-        target(10) = patch(X,Y,Z,'green');
+        target(3) = patch(X,Y,Z,'green');
         
         X = [0.5 0.5 0.5 0.5];
         Y = [0 1 1 0];
         Z = [0 0 00.25 0.25];
-        target(11) = patch(X,Y,Z,'green');
+        target(4) = patch(X,Y,Z,'green');
         
         X = [0.5 0 0 0.5];
         Y = [1 1 1 1];
         Z = [0 0 0.25 0.25];
-        target(12) = patch(X,Y,Z,'green');
+        target(5) = patch(X,Y,Z,'green');
         
         X = [0 0 0 0];
         Y = [0 0 1 1];
         Z = [0 0.25 0.25 0];
-        target(13) = patch(X,Y,Z,'green');
-                [x,   y,  z] = cylinder([0.15 0.15]); % Cylinder
-        target(2) = surface(0.1*z+0.5,           y,   x, 'FaceColor', [0.75 0.75 0.75]);
-        target(3) = surface(0.1*-z,          y,   x, 'FaceColor', [0.75 0.75 0.75]);
-        target(4) = surface(0.1*z+0.5,           y+0.35,   x, 'FaceColor', [0.75 0.75 0.75]);
-        target(5) = surface(0.1*-z,          y+0.35,   x, 'FaceColor', [0.75 0.75 0.75]);
-        target(6) = surface(0.1*z+0.5,           y+1,   x, 'FaceColor', [0.75 0.75 0.75]);
-        target(7) = surface(0.1*-z,          y+1,   x, 'FaceColor', [0.75 0.75 0.75]);
-        target(14) = surface(0.1*z+0.5,           y+.65,   x, 'FaceColor', [0.75 0.75 0.75]);
-        target(15) = surface(0.1*-z,          y+.65,   x, 'FaceColor', [0.75 0.75 0.75]);
-        target(8) = surface(-0.1*z,          y,   0.2*x, 'FaceColor', 'green');
+        target(6) = patch(X,Y,Z,'green');
+        [x,   y,  z] = cylinder([0.15 0.15]); % Cylinder
+        target(7) = surface(0.1*z+0.5,           y,   x, 'FaceColor', [0.75 0.75 0.75]);
+        target(8) = surface(0.1*-z,          y,   x, 'FaceColor', [0.75 0.75 0.75]);
+        target(9) = surface(0.1*z+0.5,           y+0.35,   x, 'FaceColor', [0.75 0.75 0.75]);
+        target(10) = surface(0.1*-z,          y+0.35,   x, 'FaceColor', [0.75 0.75 0.75]);
+        target(11) = surface(0.1*z+0.5,           y+1,   x, 'FaceColor', [0.75 0.75 0.75]);
+        target(12) = surface(0.1*-z,          y+1,   x, 'FaceColor', [0.75 0.75 0.75]);
+        target(13) = surface(0.1*z+0.5,           y+.65,   x, 'FaceColor', [0.75 0.75 0.75]);
+        target(14) = surface(0.1*-z,          y+.65,   x, 'FaceColor', [0.75 0.75 0.75]);
+        target(15) = surface(-0.1*z,          y,   0.2*x, 'FaceColor', 'green');
         rotate(target(8), [0 0 0.00001], 90);%rotating 90% around the z axis for correct orientation
+        t = hgtransform;
+        set(target, 'Parent', t);  % Apply the transform to all surfaces in vector 'h'
+        M = eye(4);
+        M = M * makehgtform('translate', [5438 5966 0]);
+        M = M * makehgtform('scale', [500 500 500]);%scaled up so it was visible
+        
+        set(t, 'Matrix', M);   % Update transformation matrix
+
     end
 
 
