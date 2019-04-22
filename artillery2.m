@@ -10,7 +10,7 @@ main();
 function main()
 % Constants
 GRAVITY = -9.80665;
-target_coord = [5438 5966 0]; %where the enemy target lies
+target_coord = [4205 4695 0]; %where the enemy target lies
 WIND = 5;
 MAX_X = 10000;
 MAX_Y = 10000;
@@ -74,36 +74,8 @@ while bullet(3) >= 0
     bullet(1) = bullet(1) + dx;
     bullet(2) = bullet(2) + dy;
     bullet(3) = bullet(3) + dz;
-    % Air Resistance
-    Fx = 0.5 * AIR_DENSITY * DRAG_COEF_BULLET * vx^2 * CROSS_AREA_BULLET;
-    Fy = 0.5 * AIR_DENSITY * DRAG_COEF_BULLET * vy^2 * CROSS_AREA_BULLET;
-    Fz = 0.5 * AIR_DENSITY * DRAG_COEF_BULLET * vz^2 * CROSS_AREA_BULLET;
+    calcAirResistance();
     
-    % Convert force of drag to velocity components of drag
-    if (vx > 0)
-        drag_x = Fx / MASS_BULLET * TIME_STEP; %
-    else
-        drag_x = 0;
-    end
-    % Convert force of drag to velocity components of drag
-    if (vy > 0)
-        drag_y = Fy / MASS_BULLET * TIME_STEP; %
-    else
-        drag_y = 0;
-    end
-    
-    
-    if (vz > 0)
-        drag_z = Fz / MASS_BULLET * TIME_STEP;
-    else
-        % Drag reduces gravity when Vz <= 0
-        drag_z = -Fz / MASS_BULLET * TIME_STEP;
-    end
-    
-    % Projectile Calculations
-    vx = vx - drag_x;
-    vy = vy - drag_y;
-    vz = vz + GRAVITY * TIME_STEP;
     
     time = time + TIME_STEP;
     fprintf("%.3f s X: %f \t Y: %f \t Z: %f \t Vx: %f \t Vz: %f \t total distance: %f\n", time, bullet(1),bullet(2), bullet(3), vx, vz, sqrt(bullet(1)^2+bullet(2)^2));
@@ -119,6 +91,38 @@ else
     
 end
 
+    function calcAirResistance()
+        % Air Resistance
+        Fx = 0.5 * AIR_DENSITY * DRAG_COEF_BULLET * vx^2 * CROSS_AREA_BULLET;
+        Fy = 0.5 * AIR_DENSITY * DRAG_COEF_BULLET * vy^2 * CROSS_AREA_BULLET;
+        Fz = 0.5 * AIR_DENSITY * DRAG_COEF_BULLET * vz^2 * CROSS_AREA_BULLET;
+        
+        % Convert force of drag to velocity components of drag
+        if (vx > 0)
+            drag_x = Fx / MASS_BULLET * TIME_STEP; %
+        else
+            drag_x = 0;
+        end
+        % Convert force of drag to velocity components of drag
+        if (vy > 0)
+            drag_y = Fy / MASS_BULLET * TIME_STEP; %
+        else
+            drag_y = 0;
+        end
+        
+        
+        if (vz > 0)
+            drag_z = Fz / MASS_BULLET * TIME_STEP;
+        else
+            % Drag reduces gravity when Vz <= 0
+            drag_z = -Fz / MASS_BULLET * TIME_STEP;
+        end
+        % Projectile Calculations
+        vx = vx - drag_x;
+        vy = vy - drag_y;
+        vz = vz -drag_z+ GRAVITY * TIME_STEP;
+        
+    end
     function drawHowitzer()
         [x,   y,  z] = cylinder([1 1]); % Cylinder
         howitzer(1) = surface(0.5*z,           y,   x, 'FaceColor', [0.75 0.75 0.75]);%left wheel
@@ -188,11 +192,11 @@ end
         t = hgtransform;
         set(target, 'Parent', t);  % Apply the transform to all surfaces in vector 'h'
         M = eye(4);
-        M = M * makehgtform('translate', [5438 5966 0]);
+        M = M * makehgtform('translate', [4205 4695 0]);
         M = M * makehgtform('scale', [500 500 500]);%scaled up so it was visible
         
         set(t, 'Matrix', M);   % Update transformation matrix
-
+        
     end
 
 
